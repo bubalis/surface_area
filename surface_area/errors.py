@@ -1,0 +1,2 @@
+class NotRasterError(Exception):
+    pass
