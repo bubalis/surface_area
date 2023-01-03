@@ -23,7 +23,7 @@ import sys
 
 
 #Example array from the paper
-r = np.array([[190,170,155], [183,165,145], [175,160,122]])
+
 
 directions = [(0,1),   #over 1 to the right
 (1,1), #over 1 to the right and down 1
@@ -100,20 +100,25 @@ def generate_edge_array(r, cell_y, cell_x):
     
     #fill in the 4 sub-arrays representing each direction
     for i, (di, len_ ) in enumerate(zip(directions, lens)):
-        start_y = max(di[0], 0)
-        start_x = max(di[1], 0)
-        end_y =  r.shape[0]-start_y
-        end_x =  r.shape[1] - start_x
-        shift_array = r[start_y:, start_x:]
-        sub_array = r[0: end_y, 0: end_x]
+        start_y_shift = max(di[0], 0)
+        start_x_shift = max(di[1], 0)
+        start_y_sub = max(0, di[0] * -1)
+        start_x_sub = max(0, di[1] * -1)
+        end_y =  r.shape[0]- di[0]
+        end_x =  r.shape[1] - di[1]
+        shifted_array = r[start_y_shift: r.shape[0] + min(0, di[0]), 
+                        start_x_shift: r.shape[1] + min(0, di[1])]
+        
+        
+        sub_array = r[start_y_sub: end_y, start_x_sub: end_x]
         
 
-        edges = np.sqrt((shift_array - sub_array)**2 + len_**2)
+        edges = np.sqrt((shifted_array - sub_array)**2 + len_**2)
 
         #half the length of each edge is in the pixel,
         #half is not, 
         edges = edges * .5
-        edge_array[0: end_y, 0:end_x,i] = edges
+        edge_array[start_y_sub : end_y, start_x_sub :end_x,i] = edges
     return edge_array
 
 
@@ -150,7 +155,7 @@ def select_triangle_edge(edge_array, r, index):
     return tri_array
 
 
-def calc_tot_area_2(r, edge_array, cell_y, cell_x):
+def calc_total_area(r, edge_array, cell_y, cell_x):
     areas = np.zeros(r.shape, dtype = np.longdouble)
     
     for row, shift in zip(tris[4:], 
@@ -202,7 +207,7 @@ def shift_array(a, shift_y, shift_x, default_array = 0) :
     return out
          
 
-def calculate_total_area(r, edge_array, cell_y, cell_x):
+def calc_total_area_old(r, edge_array, cell_y, cell_x):
     '''Use the edge array to calculate the cell-by-cell 
     surface area of the raster r.'''
 
@@ -252,5 +257,5 @@ def calculate_total_area(r, edge_array, cell_y, cell_x):
 def surface_area(dem, cell_y, cell_x):
     edge_array = generate_edge_array(dem, cell_y, cell_x)
 
-    areas = calc_tot_area_2(dem, edge_array, cell_y, cell_x)
+    areas = calc_total_area(dem, edge_array, cell_y, cell_x)
     return areas
