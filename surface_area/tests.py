@@ -8,7 +8,7 @@ Created on Tue Jan  3 08:37:57 2023
 import unittest
 import numpy as np
 
-from .array_tools import *
+from .array_tools import surface_area, generate_edge_array, calc_total_area
 
 r1 = np.array([[190,170,155], [183,165,145], [175,160,122]])
 
@@ -25,9 +25,9 @@ class Test_Surface_Area(unittest.TestCase):
         
     def test_sa_rounded_paper(self):
         edges = np.round(generate_edge_array(r1, cell_y, cell_x), 2)
-        areas = np.round(calc_total_area(r, edges, cell_y, cell_x), 2)
+        areas = np.round(calc_total_area(r1, edges, cell_y, cell_x), 2)
         from_paper = 10280.48
-        self.assertEqual(areas.sum(), from_paper)
+        self.assertEqual(areas[1,1], from_paper)
     
     def test_flat(self):
         r = np.ones((10,10))
@@ -37,7 +37,7 @@ class Test_Surface_Area(unittest.TestCase):
     def test_45(self):
         r = np.repeat(np.arange(0, 10, 1), 10).reshape((10,10))
         res = surface_area(r, 1,1)
-        self.assertTrue(np.all(res == np.sqrt(2)))
+        self.assertTrue(np.all(np.round(res,5) == np.round(np.sqrt(2), 5)))
     
 class Test_Edge_Array(unittest.TestCase):
     def test_edge_array_paper(self):
@@ -63,7 +63,7 @@ class Test_Edge_Array(unittest.TestCase):
         
         
         )
-        for value, loc in data:
+        for value, loc in data.values():
             self.assertEqual (np.round(edges[loc], 2), value) 
     
     
