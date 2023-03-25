@@ -43,6 +43,8 @@ def prep_data(raster_path):
     
     return dem, cell_y, cell_x, meta
 
+
+
 def save_ouputs(areas, meta, dem, out_raster):
     '''Save the outputs from the surface_area routine to the out-raster.'''
     meta.update({'dtype': areas.dtype})

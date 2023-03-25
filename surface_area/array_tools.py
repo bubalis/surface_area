@@ -16,13 +16,10 @@
 
 import numpy as np
 from math import sqrt
-
-
 import sys
 
 
 
-#Example array from the paper
 
 
 directions = [(0,1),   #over 1 to the right
@@ -33,7 +30,7 @@ directions = [(0,1),   #over 1 to the right
 
 # triangles that partially make up a cell.
 # the first two numbers represent position relative to the origin (0, 0)
-# the third is the direction code
+# the third is the direction code shown in the list "directions"
 
 
 tris =  [[[-1, -1,  1],
@@ -173,9 +170,9 @@ def calc_total_area(r, edge_array, cell_y, cell_x):
         
 
     # inflate the values for the edges
-    # on the edges of the raster, only 4 triangles are calculated, 
-    # so double the calculated area. In corners only 2 are calculated, 
-    # so they are doubled 2x by being doubled with two edges.
+    # on the edges of the raster, only 4 out of 8 triangles are calculated, 
+    # so double the calculated area. In corners only 2 out of are calculated, 
+    # so they are doubled twice, once for the horizontal, once for the veritical
     
     areas[0] = areas[0] *2; areas[-1] = areas[-1] *2 
     areas[:, 0] = areas[:,0] *2; areas[:, -1] = areas[:, -1] *2
